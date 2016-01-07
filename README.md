@@ -9,12 +9,13 @@
 3. Module
 4. Etat
 5. Theme
+6. Sources et liens utiles 
 
 #### 1- Base :
 ----
 Concerne les éléments de base html comme body ou h1 etc.
 Pour ces formes, il peut être utile d'utiliser des styles récurrents.
-Eviter le plus les CSS resets (des styles qui en annulent d'autres) ou savoir les utiliser à bon escient.
+Eviter le plus possible les CSS resets (des styles qui en annulent d'autres) ou savoir les utiliser à bon escient.
 
 ```css
 body, form {
@@ -32,8 +33,17 @@ a:hover {
 ```
 #### 2- Mise en page
 ---
-* Concerne des éléments de type ID.
-
+* Avant toute chose il faut créer un dossier SCSS. Dans ce dossier on créé un fichier style.scss
+qui va regrouper tous les fichiers .scss ainsi qu'un dossier avec tous les fichiers .scss.
+```
+@import 'modules_scss/accueil_body';
+@import 'modules_scss/accueil_accueil';
+@import 'modules_scss/accueil_contenu_de_la_page';
+@import 'modules_scss/accueil_bandeau_partenaires';
+@import 'modules_scss/accueil_footer';
+@import 'modules_scss/accueil_menu';
+@import 'modules_scss/accueil_slider';
+```
 * On définit en priorité la position des éléments.
 
 * Lorsqu'une classe modifie la position, on la déclare avec l'ID correspondant
@@ -54,6 +64,7 @@ a:hover {
 }
 ```
 Lorsque l'on veut généraliser une classe, on n'utilise pas les ID mais on cible classe et élément pour pouvoir réutiliser le style et réduire de même la longueur du code CSS en évitant de le dupliquer
+
 
 #### 3. Module
 ---
@@ -99,11 +110,11 @@ Exemple:
     color: #A66105;}
 ```
 
-
 # Aspects de SMACCS
 ----
 ## Profondeur d'application
 Dans un style commun tel que :
+
 ```css
 #sidebar div {
     border: 1px solid #333;
@@ -135,9 +146,9 @@ Sur un code comme celui-ci :
 }
 ```
 
-On peut diminuer la profondeur de champ en partant de la div à laquelle on va ajouter une classe 
-```css
-(.pod):
+On peut diminuer la profondeur de champ en partant de la div à laquelle on va ajouter une classe css (.pod):
+
+```
 .pod {
     border: 1px solid #333;
 }
@@ -151,7 +162,9 @@ On peut diminuer la profondeur de champ en partant de la div à laquelle on va a
 } 
 ```
 L'avantage de ce style est de pouvoir être réutilisable dans d'autre cas comme les templates mustache par exemple :
-```html
+
+```
+html
 <div class="pod">
     <h3>{{heading}}</h3>
     <ul>
@@ -165,19 +178,25 @@ L'avantage de ce style est de pouvoir être réutilisable dans d'autre cas comme
 Il faut essayer de trouver un équilibre entre maintenance, performance et lisibilité. Le principe est de ne pas appliquer de classes inutiles et de les utiliser à des endroits pertinents. Afin de rendre le code plus ouvert et flexible.
 
 On peut aussi dupliquer les règles :
+
 ```css
 .pod > ul, .pod > ol, .pod > div {
     margin-bottom: 5px; 
 } 
 ```
+
 Ou simplifier en classifiant pour réutiliser le style par exemple :
+
 ```css
 .pod-body {
     margin-bottom: 5px; 
 }
 ```
-À l'intérieur de ce template
-```html
+
+À l'intérieur de ce template:
+
+```
+html
 <div class="pod">
     <h3>{{heading}}</h3>
     <ul class="pod-body">
@@ -187,10 +206,13 @@ Ou simplifier en classifiant pour réutiliser le style par exemple :
     </ul>
 </div> 
 ```
+
 ## Performance des sélecteurs
 ---
 Pour optimiser la performance de rendu de la page, il faut comprendre la façon dont est lu le code par le navigateur, le HTML est évalué comme un flux de données, et chaque élément peut commencer à être traîté alors que le serveur n'a pas encore envoyé tout le document. Exemple :
-```html
+
+```
+html
 <body>
    <div id="content">
       <div class="module intro">
@@ -207,6 +229,7 @@ Pour optimiser la performance de rendu de la page, il faut comprendre la façon 
 Lorsque le navigateur arrive sur la première ligne ```<body>```, rien d'autre n'existe pour lui et il va aller chercher le style CSS qui lui correspond, puis il descend sur la ligne ```<div id="content">``` et fait pareil, il va chercher le CSS qui correspond. Et ceci jusqu'à la fin du document.
 
 Le CSS est lu de droite à gauche par exemple :
+
 ```css
 body div#content p { color: #003366; }
 ```
@@ -222,7 +245,8 @@ utiliser les classes pour les sélecteurs le plus à droite
 #### BEM : Block, Element, Modifier
 ----
 ##### Definition : 
-Façon de nommer les classes en CSS 
+Façon de nommer les classes en CSS   
+La méthodolgie de BEM permet d'accélerer le processus de développement et de facilter le travail en équipe.
 
 ##### Block:
 conteneur , ce qui englobe le tout il représente le niveau supérieur d'une abstraction ou d'un composant 
@@ -245,6 +269,7 @@ EX: ```.block--modifieur {}```
 
 
 Exemple:
+
     ```
     .personne {},
     .personne--femme {},
@@ -261,8 +286,10 @@ Partant du postulat qu'il s'agit d'une femme. Nous ajoutons ensuite l'element ma
 Les blocks et les éléments doivent avoir un nom unique, qui sera utilisé comme class CSS.
 
 Les sélecteurs CSS ne doivent pas utiliser les noms des éléments HTML.
+
 ##### 1. Méthodologie BEM
 Il permet de faciliter le travail du développement en équipe.
+
 ##### 2. Outils BEM
 Les outils BEM peuvent faire:
 * créer des entités
@@ -281,12 +308,14 @@ Sass est un langage de génération dynamique de feuille de style CSS. Il permet
 ---
 Une variable permet de stocker n'importe quelles informations (couleur, taille, texte, etc.) dans un objet que l'on nomme $MonObjet.
 Exemple : 
+
 ```css
 $bleu : #123DD3
 $vert_fluo : #6654RF4
 $jaune_pipi : #999878
 ```
 On peut ensuite réutiliser ces variables stockées dans notre fichier SASS dans notre fichier CSS : 
+
 ```
 H1 {
     color : $bleu
@@ -296,11 +325,179 @@ H2 {
     color : $jaune_pipi
 }
 ```
+
+#Sass
+
+###Pourquoi Gulp
+Je vais faire court. Pour faire simple, son point fort réside dans le fait qu’il utilise des streams (tl;dr: un flux de données - en mémoire) et qu’il limite au maximum l’utilisation de fichiers.
+
+![Alt text] (http://jaysoo.ca/images/grunt-flow-2.png)
+
+![Alt text] (http://blog.xebia.fr/wp-content/uploads/2014/02/js.png)
+
+Et du coup au lieu d’avoir un fichier de conf d’une soixantaine de lignes, on arrive à avoir quelque chose de concis (une vingtaine de ligne seulement).
+
+![Alt text] (http://jaysoo.ca/images/gulp-flow.png)
+
+![Alt text] (http://blog.xebia.fr/wp-content/uploads/2014/02/js2.png)
+
+####Expliquation du code d'insertion:
+
+```
+// bah là ok, on est obligé d'y passer pour avoir l'API Gulp
+var gulp = require("gulp")
+
+  // Ça c'est optionnel, c'est pour avoir (entre autres la méthode noop())
+  // je reviens dessus après
+  // https://github.com/gulpjs/gulp-util
+var gutil = require("gulp-util")
+
+  // Là on a Mario le plombier qui fixe la tuyauterie foireuse.
+  // Ce plugin patch le problème de stream avec node.js qui fait que tout le process
+  // explose à la moindre erreur (pas pratique en cas de watch par exemple)
+  // en gros, il remplace la méthode pipe et attrape les erreurs pour les ressortir gentiment
+  // https://gist.github.com/floatdrop/8269868
+var plumber = require("gulp-plumber")
+
+  // Ici, rien de magique, du plugin en veux-tu en voilà
+var cssnext = require("gulp-cssnext")
+var csso = require("gulp-csso")
+
+  // ici on chope les options de la ligne de commande
+  // exemple: pour avoir options.production à true,
+  // il suffit de faire `gulp --production`
+var options = require("minimist")(process.argv.slice(2))
+
+// Définition d'une tâche, un nom et une fonction.
+// Ce qui est pratique c'est le fait de pouvoir mettre ce qu'on veut
+// y compris un console.log() ^^
+// un autre paramètre peut être ajouté avant la fonction, qui permet de préciser
+// les dépendances (cf task dev plus bas par exemple)
+gulp.task("styles", function() {
+
+  // Ici on attrape les fichiers (glob classique)
+  // à la racine (on va considérer que nos fichiers finaux ne seront pas dans
+  // des sous dossiers, réservés aux partials & co)
+  gulp.src("./src/css/*.css")
+
+    // On utilise plumber que si on build en dev, sinon faut que ça pête, qu'on
+    // soit prévenu lors d'un build pour la prod
+    .pipe(!options.production ? plumber() : gutil.noop())
+
+    // Et là on pipe nos plugins
+    // toujours en jouant avec les options si besoin
+    .pipe(cssnext({
+      compress: options.production,
+      sourcemap: !options.production
+    }))
+
+    // Super important, on convertit nos streams en fichiers
+    .pipe(gulp.dest("./dist/css/"))
+})
+
+// Ici on a une tâche de dev qui lance un watch APRES avoir exécuté `styles` une fois
+gulp.task("default", ["styles"], function() {
+
+  // gulp.watch est natif (pas comme avec grunt)
+  // vous noterez qu'ici par exemple on va surveiller tous les fichiers
+  // et non pas ceux juste à la racine par exemple
+  gulp.watch("./src/css/**/*", ["styles"])
+})
+
+// Comme grunt, `gulp` sans argument lancera la tâche `default`.
+```
+###Présentation & installation
+
+Installation de Sass selon l'os.
+
+**Sur Mac OSX :**
+```
+sudo gem install sass
+```
+
+On utilise "sudo" car l'installation d'une gem effectue une modification sur le système, il faut donc prouver a l'ordinateur que l'on est administrateur.
+
+**Sur linux & Windows :**
+
+- Crée un fichier gulpfile.js a la racine de votre projet.
+- A l'intèrieur du fichier coller y ce contenue https://gist.github.com/elgamine-dev/2fc42f3bb1770265cd06
+
+- il faut ouvrir un terminal et tapez y c'es commande :
+```
+sudo npm install --g gulp browser-sync
+npm install --save-dev gulp-sass
+```
+
+Et pour finir :
+```
+gulp serve
+```
+-Pour avoir la coloration syntaxique sur sublimeText installer SASS via Package controle : ctrl + alt + p
+
+#Alternative Gulp
+----------
+
+###Présentation Grunt
+
+
+Vous est-il déjà arrivé de devoir régulièrement lancer, lancer et relancer des processus tels que Sass, LESS, uglify - en somme des préprocesseurs ou des minifiers - régulièrement à la main ? N’est-ce pas pénible ? N’est-ce pas aussi pénible de devoir indiquer à tous ses collègues comment ils doivent bosser pour que vous soyez tous cohérents ? Oui ? Grunt permet de résoudre ce genre de choses : respecter un putain de workflow en s’assurant que le parcours soit le même pour tout le monde et d’exécuter tout ça en lançant une seule commande. N’est-ce pas fucking aweeeeesome dude ? Bref.
+
+**Voici un workflow assez classique :**
+
+- Compiler mes .scss en .css;
+- Concaténer mes *.js en un seul fichier;
+- Minifier (avec uglify par exemple) la résultante de l’action précédente.
+
+-----
+
+##Installation
+
+Tout d’abord, installons Grunt. Notez que Grunt est en nodejs et que je considère que vous avez déjà nodejs d’installé. D’autre part, nous allons créer un nouveau projet npm afin d’enregistrer tous les packages que vous allez installer. Je vous explique par la suite pourquoi nous faisons ça.
+
+```
+npm init // tapez plusieurs fois entrée
+```
+En premier lieu, il faut installer le package qui permet de gérer Grunt en ligne de commande. C’est le commander de Grunt en gros.
+
+```
+npm install -g grunt-cli
+```
+
+Une fois cela fait, installez Grunt en local dans votre projet.
+
+```
+npm install grunt --save-dev
+```
+
+#Initialisation
+
+Maintenant, il est nécessaire de créer un fichier de configuration Grunt. Pour cela, nous allons créer un fichier nommé Gruntfile.js à la racine de votre projet.
+
+```
+touch Gruntfile.js
+```
+Fait ? Voici maintenant à quoi doit ressembler la base d’une configuration Grunt.
+
+```
+module.exports = function(grunt) {
+
+  // Configuration de Grunt
+  grunt.initConfig({})
+
+  // Définition des tâches Grunt
+  grunt.registerTask('default', '')
+
+}
+```
+
+Nous avons maintenant tout le nécessaire pour débuter notre projet. Nous allons enfin pouvoir attaquer les choses sérieuses.
+
 ##### Les mixins
 
-Les mixins reste la meilleure avancée en terme d'innovation et vous permet de rendre votre travail encore plus efficace et plus rapide. Les mixins vont vous permettre de réutiliser des pans entiers de CSS, propriétés ou des sélecteurs. Vous pouvez même leur donner des arguments afin de créer des mises en forme complexes en utilisant seulement une seule ligne de code !
+Les mixins restent la meilleure avancée en terme d'innovation et vous permettent de rendre votre travail encore plus efficace et plus rapide. Les mixins vont vous permettre de réutiliser des pans entiers de CSS, propriétés ou des sélecteurs. Vous pouvez même leur donner des arguments afin de créer des mises en forme complexes en utilisant seulement une seule ligne de code !
 
 Fichier SASS
+
 ```
 @mixin border-radius($radius) {
     -webkit-border-radius: $radius
@@ -312,7 +509,8 @@ Fichier SASS
 
 Fichier CSS
 
-```css
+```
+css
 .box {
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
@@ -320,3 +518,24 @@ Fichier CSS
   border-radius: 10px;
 }
 ```
+
+
+#### Sources et Liens utiles :
+    
+SASS:
+
+Site officiel: http://sass-lang.com/
+
+http://blog.xebia.fr/2014/02/25/gulp-le-nouvel-outil-de-build-pour-node/
+
+Tutoriel français : https://la-cascade.io/se-lancer-dans-sass/
+
+Autre tuto en français : http://blog.humancoders.com/pourquoi-sass-et-compass-49/
+    
+BEM:    
+
+Site oficiel: https://en.bem.info/
+        
+SMACSS:
+
+Site officiel:  https://smacss.com/
